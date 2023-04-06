@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    ul li {
+        border: 1px solid pink;
+        height: 300px;
+        list-style: none;
+
+    }
+</style>
+
+<body>
+    <ul>
+        <li>啦啦啦</li>
+        <li>啦啦啦</li>
+        <li>啦啦啦</li>
+        <li>啦啦啦</li>
+        <li>啦啦啦</li>
+        <li>啦啦啦</li>
+        <li>啦啦啦</li>
+    </ul>
+    <script>
+        let list = document.querySelector('ul')
+        window.addEventListener('scroll', throttle(AsyncFun, 2000))
+
+        function AsyncFun() {
+            let clientHeight = document.documentElement.clientHeight; //浏览器高度
+            let scrollHeight = document.body.scrollHeight;
+            let scrollTop = document.documentElement.scrollTop;
+            let distance = 50;
+            //当距离body还有50时开始触发
+            if ((scrollTop + clientHeight) >= (scrollHeight - distance)) {
+                console.log('加载了...')
+            }
+        }
+
+        function throttle(fn, time) {
+            let begin = 0;
+            return function () {
+                let curTime = new Date().getTime();
+                if (curTime - begin > time) {
+                    fn.call(this);
+                    begin = curTime;
+                }
+            };
+        }
+    </script>
+</body>
+
+</html>

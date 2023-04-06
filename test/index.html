@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        var songs =[
+    {name:'刚刚好', singer:'薛之谦', url:'http://music.163.com/xxx'},
+    {name:'最佳歌手', singer:'许嵩', url:'http://music.163.com/xxx'},
+    {name:'初学者', singer:'薛之谦', url:'http://music.163.com/xxx'},
+    {name:'绅士', singer:'薛之谦', url:'http://music.163.com/xxx'},
+    {name:'我们', singer:'陈伟霆', url:'http://music.163.com/xxx'},
+    {name:'画风', singer:'后弦', url:'http://music.163.com/xxx'},
+    {name:'We Are One', singer:'郁可唯', url:'http://music.163.com/xxx'} 
+
+]
+
+var html='<div class="song-list">'+
+'  <h1>热歌榜</h1>'+
+'  <ol>'+
+'<%for(var i=0; i<this.songs.length;i++){%>'+
+'<li><%this.songs[i].name%> - <%this.songs[i].singer%></li>'+
+'<%}%>'+
+'  </ol>'+
+'</div>'
+//? 出现零次或一次 + 出现一次或多次
+let TemplateEngine=function(template,data){
+    //全局匹配以<%开头，中间不是%或>并以%>结尾的配配项
+    let re=/<%([^%>]+)?%>/g
+    let reExp=/(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g
+    let code='let Arr=[];\n'
+    let cursor=0
+    let add = function(line,js){
+        //外层的三目运算符判断是匹配的那部分还是字符串那部分
+        //当他是匹配的那部分时，要判断它是否是循环或者判断语句
+        js? (code += line.match(reExp) ? line + '\n' : 'Arr.push(' + line + ');\n') 
+        :(code += line != '' ? 'Arr.push("' + line.replace(/"/g, '\\"') + '");\n' : '')
+        return add;
+    }
+    while(match=re.exec(template)){
+        add(template.slice(cursor,match.index))
+        add(match[1],true)
+        cursor=match.index+match[0].length
+    }
+    add(template.substr(cursor,template.length-cursor))
+    code+='return Arr.join("");'; 
+    console.log(code);
+    result=new Function(code.replace(/[\r\t\n]/g, ''))
+    return result
+}
+//最后把结果渲染到页面上
+let res=TemplateEngine(html,songs)
+document.body.innerHTML=res();
+    </script>
+  
+
+</body>
+</html>
